@@ -1,7 +1,9 @@
 import './App.css';
 import React from 'react';
 import './Todo/TodoList';
+import AddTodo from './Todo/AddTodo';
 import TodoList from './Todo/TodoList';
+import Context from './context';
 function App() {
   const [todos,setTodos] = React.useState([
     {id:1,complete: false,title:'buy food'},
@@ -16,11 +18,24 @@ function App() {
       return todo;
     }))
   }
+  function removeTodo(id){
+    setTodos(todos.filter(todo => todo.id!==id))
+  }
+  function addTodo(title){
+    setTodos(todos.concat([{
+      title,
+      id: Date.now(),
+      complete:false
+    }]))
+  }
   return (
+    <Context.Provider value = {{removeTodo}}>
     <div className="wrapper">
       <h1>New app</h1>
-      <TodoList todos={todos} onToggle = {toggleTodo}/>
+      <AddTodo onCreate={addTodo}/>
+      {todos.length ? <TodoList todos={todos} onToggle = {toggleTodo}/> : <p>You have not got todos</p>}
     </div>
+    </Context.Provider>
   );
 }
 
